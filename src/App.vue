@@ -1,8 +1,7 @@
 <template>
 <!--  <HelloWorld msg="Hugo Boss"/>-->
   <div>
-    <h1>
-      trst question
+    <h1 v-html="this.question">
     </h1>
     <input
         type="radio"
@@ -26,8 +25,41 @@ export default {
   name: 'App',
   components: {
     // HelloWorld
+  },
+  data() {
+    return {
+     question : undefined,
+      incorrectAnswers : [],
+      correctAnswer : undefined
+    }
+  },
+  computed: {
+    answers() {
+      let answers = [...this.incorrectAnswers];
+      // let answers = JSON.parse( JSON.stringify(this.incorrectAnswers));
+      answers.push(this.correctAnswer);
+      return answers;
+    }
+  },
+  created() {
+    let apiUrl = 'https://opentdb.com/api.php?amount=1&category=18';
+    this.axios.
+    get(apiUrl).
+    then((response) => {
+      this.question = response.data.results[0].question;
+      this.correctAnswer = response.data.results[0].correct_answer;
+      this.incorrectAnswers = response.data.results[0].incorrect_answers;
+      console.log(response.data.results[0])
+      // let res = response.data.results;
+    })
   }
 }
+
+
+//https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple
+
+
+
 </script>
 
 <style lang="scss">
